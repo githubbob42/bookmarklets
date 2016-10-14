@@ -3,16 +3,18 @@ javascript:(function() {
     if (!tbody.length) return;
 
     var json = {};
-    var headers, data;
+    var data;
 
     var thead = $("thead");
     for (var hdrNum=0; hdrNum < thead.length; hdrNum++) {
-        headers = json[$(tbody[hdrNum]).attr("data-id") + "_headers"] = [];
         for (var rowNum=0; rowNum < thead[hdrNum].rows.length; rowNum++) {
-            for (var cellNum=0; cellNum < thead[0].rows[rowNum].cells.length; cellNum++ ) {
-                var cell = $(thead[0].rows[rowNum].cells[cellNum]);
-                headers.push(cell.text().trim());
+            var hdrData = {};
+            for (var cellNum=0; cellNum < thead[hdrNum].rows[rowNum].cells.length; cellNum++ ) {
+                var cell = $(thead[hdrNum].rows[rowNum].cells[cellNum]);
+                if (!cell.attr("data-id")) continue;
+                hdrData[cell.attr("data-id").replace("field-", "")] = cell.text().trim();
             }
+            json[$(tbody[hdrNum]).attr("data-id") + "-headers"] = hdrData;
         }
     }
 
